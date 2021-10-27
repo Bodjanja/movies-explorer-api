@@ -19,7 +19,7 @@ module.exports.addMovie = (req, res, next) => {
   // eslint-disable-next-line max-len
   const { country, director, duration, year, description, image, trailer, nameRu, nameEn, thumbnail } = req.body;
   const owner = req.user._id;
-  const movieId = req.data._id;
+  const movieId = res.data._id;
   // eslint-disable-next-line object-curly-newline
   // eslint-disable-next-line max-len
   Movie.create({ country, director, duration, year, description, image, trailer, nameRu, nameEn, thumbnail, owner, movieId })
