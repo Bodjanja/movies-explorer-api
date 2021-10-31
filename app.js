@@ -3,16 +3,14 @@ require('dotenv').config();
 const cors = require('cors');
 const mongoose = require('mongoose');
 const helmet = require('helmet');
-const { celebrate, Joi } = require('celebrate');
-const { errors } = require('celebrate');
 
-const NotFoundInBase = require('./errors/NotFoundInBaseError');
+const { errors } = require('celebrate');
+const rateLimiter = require('./middlewares/rateLimiter');
+
 const centredErrors = require('./middlewares/error');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
-const { login, createUser } = require('./controllers/user');
-
-const { PORT = 3000 } = process.env;
+const { PORT, MONGO_DB_ADRESS } = require('./config');
 
 const app = express();
 
@@ -25,38 +23,19 @@ const corsOption = {
 
 app.use(cors(corsOption));
 
-const routeUser = require('./routes/user');
-const routeMovies = require('./routes/movies');
-
-mongoose.connect('mongodb://localhost:27017/bitfilmsdb', {
+mongoose.connect(MONGO_DB_ADRESS, {
 });
 
+app.use(rateLimiter);
 app.use(helmet());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.use(requestLogger);// Подключения логгера запросов
 
-app.use(routeUser);
-app.use(routeMovies);
+const allRoutes = require('./routes/index');
 
-app.post('/signin', celebrate({
-  body: Joi.object().keys({
-    password: Joi.string().required(),
-    email: Joi.string().required().email(),
-  }),
-}), login);
-app.post('/signup', celebrate({
-  body: Joi.object().keys({
-    password: Joi.string().required(),
-    email: Joi.string().required().email(),
-    name: Joi.string().min(2).max(30),
-  }),
-}), createUser);
-
-app.get('*', () => {
-  throw new NotFoundInBase('Запрашиваемый ресурс не найден');
-});
+app.use(allRoutes);
 
 app.use(errorLogger);// Подключения логгера ошибок
 
