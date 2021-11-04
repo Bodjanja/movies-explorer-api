@@ -26,12 +26,12 @@ app.use(cors(corsOption));
 mongoose.connect(MONGO_DB_ADRESS, {
 });
 
+app.use(requestLogger);// Подключения логгера запросов
+
 app.use(rateLimiter);
 app.use(helmet());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-
-app.use(requestLogger);// Подключения логгера запросов
 
 const allRoutes = require('./routes/index');
 
