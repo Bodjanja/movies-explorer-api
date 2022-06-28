@@ -16,9 +16,12 @@ const app = express();
 
 const corsOption = {
   origin: [
-    'http://localhost:8080',
+    'http://localhost:3001',
+    'http://localhost:3000',
     'http://bodjanja.nomoreparties.sbs',
     'https://bodjanja.nomoreparties.sbs',
+    'localhost:3001',
+    'localhost:3000',
   ],
   methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
   preflightContinue: false,
