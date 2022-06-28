@@ -15,9 +15,15 @@ const { PORT, MONGO_DB_ADRESS } = require('./config');
 const app = express();
 
 const corsOption = {
-  origin: '*',
-  optionsSuccessStatus: 200,
-  methods: ['GET,HEAD,PUT,PATCH,POST,DELETE'],
+  origin: [
+    'http://localhost:8080',
+    'http://bodjanja.nomoreparties.sbs',
+    'https://bodjanja.nomoreparties.sbs',
+  ],
+  methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
+  preflightContinue: false,
+  optionsSuccessStatus: 204,
+  allowedHeaders: ['Content-Type', 'origin', 'Authorization'],
   credentials: true,
 };
 
